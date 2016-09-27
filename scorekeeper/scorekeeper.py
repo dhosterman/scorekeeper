@@ -36,6 +36,7 @@ class Scorekeeper(_ScorekeeperSharedState):
 
     def reset_score(self):
         self.score = 0
+        self._set_score()
 
     def _get_score(self):
         with shelve.open(self._shelve_path()) as db:

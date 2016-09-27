@@ -97,4 +97,3 @@ def test_scorekeeper_decorator():
     foo()
 
     assert scorekeeper_obj.score == 10
-
