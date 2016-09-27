@@ -17,14 +17,16 @@ class Scorekeeper(_Borg):
         _Borg.__init__(self)
 
     def __call__(self, score, threshold=100, decay=None, callback=None):
+        return_value = None
         self.score = self._get_score()[1]
         if decay:
             self._decay(decay)
         self.score += score
         if self.score > threshold:
             self.reset_score()
-            self.default_callback() if not callback else callback()
+            return_value = self.default_callback() if not callback else callback()
         self._set_score()
+        return return_value
 
     def default_callback(self):
         raise ScorekeeperError("Score has been exceeded!")
