@@ -64,3 +64,17 @@ class Scorekeeper(_ScorekeeperSharedState):
 
 class ScoreExceededError(Exception):
     pass
+
+
+def score(scorekeeper_obj, points, **kwargs):
+
+    def decorator(func):
+
+        def wrapper(*args):
+            if not func():
+                obj = scorekeeper_obj()
+                obj(points, **kwargs)
+
+        return wrapper
+
+    return decorator

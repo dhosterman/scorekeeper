@@ -13,6 +13,7 @@ import pytest
 from freezegun import freeze_time
 
 from scorekeeper.scorekeeper import Scorekeeper
+from scorekeeper.scorekeeper import score
 
 tmp_path = None
 current_test = None
@@ -82,4 +83,17 @@ def test_scorekeeper_decays(monkeypatch, points, time, expected):
         decay = 5
         scorekeeper_obj(points, decay=decay)
         assert scorekeeper_obj.score == expected
+
+
+def test_scorekeeper_decorator():
+    scorekeeper_obj = ScorekeeperObj()
+    assert scorekeeper_obj.score == 0
+
+    @score(ScorekeeperObj, 10, threshold=50)
+    def foo():
+        return False
+
+    foo()
+
+    assert scorekeeper_obj.score == 10
 
