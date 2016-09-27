@@ -12,8 +12,8 @@ import pytest
 
 from freezegun import freeze_time
 
-from scorekeeper.scorekeeper import Scorekeeper
-from scorekeeper.scorekeeper import score
+from scorekeeper import Scorekeeper
+from scorekeeper import score
 
 tmp_path = None
 current_test = None
