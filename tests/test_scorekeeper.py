@@ -75,7 +75,8 @@ def test_callback_when_threshold_exceeded(points, expected):
 @pytest.mark.parametrize("points, time, expected",
                          [
                              (10, "2016-01-01 12:00:00", 10),
-                             (20, "2016-01-01 12:00:10", 28)
+                             (20, "2016-01-01 12:00:10", 28),
+                             (20, "2016-01-01 12:00:30", 44),
                          ])
 def test_scorekeeper_decays(monkeypatch, points, time, expected):
     with freeze_time(time):
