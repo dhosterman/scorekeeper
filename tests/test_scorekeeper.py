@@ -10,6 +10,8 @@ Tests for `scorekeeper` module.
 
 import pytest
 
+from freezegun import freeze_time
+
 from scorekeeper.scorekeeper import Scorekeeper
 
 tmp_path = None
@@ -67,3 +69,17 @@ def test_callback_when_threshold_exceeded(points, expected):
 
     scorekeeper_obj = ScorekeeperObj()
     assert scorekeeper_obj(points, threshold=threshold, callback=callback) == expected
+
+
+@pytest.mark.parametrize("points, time, expected",
+                         [
+                             (10, "2016-01-01 12:00:00", 10),
+                             (20, "2016-01-01 12:00:10", 28)
+                         ])
+def test_scorekeeper_decays(monkeypatch, points, time, expected):
+    with freeze_time(time):
+        scorekeeper_obj = ScorekeeperObj()
+        decay = 5
+        scorekeeper_obj(points, decay=decay)
+        assert scorekeeper_obj.score == expected
+

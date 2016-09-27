@@ -29,13 +29,10 @@ class Scorekeeper(_Borg):
         return return_value
 
     def default_callback(self):
-        raise ScorekeeperError("Score has been exceeded!")
+        raise ScoreExceededError("Score has been exceeded!")
 
     def reset_score(self):
         self.score = 0
-
-    def seconds_since_last_score(self):
-        return 10
 
     def _get_score(self):
         with shelve.open(self._shelve_path()) as db:
@@ -58,7 +55,11 @@ class Scorekeeper(_Borg):
         self.score =  max(0, self.score - decay)
 
     def _seconds_since_last_score(self):
-        return (datetime.datetime.now() - self._get_score()[0]).seconds
+        last_time = self._get_score()[0]
+        if not last_time:
+            return 0
+        else:
+            return (datetime.datetime.now() - last_time).seconds
 
-class ScorekeeperError(Exception):
+class ScoreExceededError(Exception):
     pass
