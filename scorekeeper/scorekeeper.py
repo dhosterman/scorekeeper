@@ -15,11 +15,20 @@ class _ScorekeeperSharedState(object):
 
 
 class Scorekeeper(_ScorekeeperSharedState):
+    default_threshold = 100
+    default_decay = None
+
     def __init__(self):
         _ScorekeeperSharedState.__init__(self)
         self.score = self._get_score()[1]
 
-    def __call__(self, score, threshold=100, decay=None, callback=None):
+    def __call__(self, score, threshold=None, decay=None, callback=None):
+        if not threshold:
+            threshold = self.default_threshold
+        if not decay:
+            decay = self.default_decay
+        if not callback:
+            callback = self.default_callback
         return_value = None
         self.score = self._get_score()[1]
         if decay:
@@ -51,7 +60,6 @@ class Scorekeeper(_ScorekeeperSharedState):
 
     def _shelve_path(self):
         return pkg_resources.resource_filename('scorekeeper', 'data/scores')
-
 
     def _decay(self, rate):
         time = self._seconds_since_last_score()

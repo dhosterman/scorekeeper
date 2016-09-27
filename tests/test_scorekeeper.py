@@ -45,6 +45,11 @@ class DifferentScorekeeperObj(Scorekeeper):
     pass
 
 
+class ScorekeeperObjWithDefaults(Scorekeeper):
+    default_threshold = 50
+    default_decay = 5
+
+
 @pytest.mark.parametrize("points, expected", [(10, 10), (20, 30), (30, 60)])
 def test_scorekeeper_increments(points, expected):
     scorekeeper_obj = ScorekeeperObj()
@@ -86,11 +91,25 @@ def test_scorekeeper_decays(monkeypatch, points, time, expected):
         assert scorekeeper_obj.score == expected
 
 
+@pytest.mark.parametrize("points, time, expected",
+                         [
+                             (10, "2016-01-01 12:00:00", 10),
+                             (20, "2016-01-01 12:00:10", 28),
+                             (20, "2016-01-01 12:00:30", 44),
+                             pytest.mark.xfail((20, "2016-01-01 12:01:00", 0)),
+                         ])
+def test_scorekeeper_defaults(monkeypatch, points, time, expected):
+    with freeze_time(time):
+        scorekeeper_obj = ScorekeeperObjWithDefaults()
+        scorekeeper_obj(points)
+        assert scorekeeper_obj.score == expected
+
+
 def test_scorekeeper_decorator():
     scorekeeper_obj = ScorekeeperObj()
     assert scorekeeper_obj.score == 0
 
-    @score(ScorekeeperObj, 10, threshold=50)
+    @score(ScorekeeperObj, 10, threshold=50, callback=lambda: True)
     def foo():
         return False
 
