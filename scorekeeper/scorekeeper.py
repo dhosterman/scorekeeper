@@ -64,6 +64,7 @@ class Scorekeeper(_ScorekeeperSharedState):
         else:
             return (datetime.datetime.now() - last_time).seconds
 
+
 class ScoreExceededError(Exception):
     pass
 
