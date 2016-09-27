@@ -4,6 +4,8 @@ import datetime
 import pkg_resources
 import shelve
 
+__all__ = ["Scorekeeper", "score"]
+
 
 class _ScorekeeperSharedState(object):
     _shared_state = {}
