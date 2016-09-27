@@ -5,14 +5,14 @@ import pkg_resources
 import shelve
 
 
-class _Borg(object):
+class _ScorekeeperSharedState(object):
     _shared_state = {}
 
     def __init__(self):
         self.__dict__ = _Borg._shared_state.setdefault(type(self), {"score": 0})
 
 
-class Scorekeeper(_Borg):
+class Scorekeeper(_ScorekeeperSharedState):
     def __init__(self):
         _Borg.__init__(self)
 
