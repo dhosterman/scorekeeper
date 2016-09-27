@@ -9,12 +9,13 @@ class _ScorekeeperSharedState(object):
     _shared_state = {}
 
     def __init__(self):
-        self.__dict__ = _Borg._shared_state.setdefault(type(self), {"score": 0})
+        self.__dict__ = _ScorekeeperSharedState._shared_state.setdefault(type(self), {})
 
 
 class Scorekeeper(_ScorekeeperSharedState):
     def __init__(self):
-        _Borg.__init__(self)
+        _ScorekeeperSharedState.__init__(self)
+        self.score = self._get_score()[1]
 
     def __call__(self, score, threshold=100, decay=None, callback=None):
         return_value = None
