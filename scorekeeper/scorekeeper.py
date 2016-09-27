@@ -9,7 +9,7 @@ class _Borg(object):
     _shared_state = {}
 
     def __init__(self):
-        self.__dict__ = _Borg._shared_state.setdefault(type(self), {})
+        self.__dict__ = _Borg._shared_state.setdefault(type(self), {"score": 0})
 
 
 class Scorekeeper(_Borg):
@@ -55,14 +55,8 @@ class Scorekeeper(_Borg):
         decay = int(time / rate)
         self.score =  max(0, self.score - decay)
 
-    def _seconds_since_last_score():
-        return (datetime.datetime.now() - _get_score()[0]).seconds
+    def _seconds_since_last_score(self):
+        return (datetime.datetime.now() - self._get_score()[0]).seconds
 
 class ScorekeeperError(Exception):
     pass
-
-
-class Singleton(Scorekeeper):
-    def default_callback(self):
-        print("Yay!")
-
