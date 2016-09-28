@@ -109,14 +109,14 @@ class Scorekeeper(_ScorekeeperSharedState):
         self._set_score()
 
     def _get_score(self):
-        db =  shelve.open(self._shelve_path())
+        db = shelve.open(self._shelve_path())
         key = type(self).__name__
         result = db.get(key) or {}
         db.close()
         return result.get("datetime"), result.get("score", 0)
 
     def _set_score(self):
-        db =  shelve.open(self._shelve_path())
+        db = shelve.open(self._shelve_path())
         key = type(self).__name__
         db[key] = {"datetime": datetime.datetime.now(), "score": self.score}
         db.close()
@@ -127,7 +127,7 @@ class Scorekeeper(_ScorekeeperSharedState):
     def _decay(self, rate):
         time = self._seconds_since_last_score()
         decay = int(time / rate)
-        self.score =  max(0, self.score - decay)
+        self.score = max(0, self.score - decay)
 
     def _seconds_since_last_score(self):
         last_time = self._get_score()[0]
