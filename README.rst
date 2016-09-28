@@ -9,8 +9,8 @@ Scorekeeper
 .. image:: https://img.shields.io/travis/dhosterman/scorekeeper.svg
         :target: https://travis-ci.org/dhosterman/scorekeeper
 
-.. image:: https://readthedocs.org/projects/scorekeeper/badge/?version=latest
-        :target: https://scorekeeper.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/dhostermanscorekeeper/badge/?version=latest
+        :target: https://dhostermanscorekeeper.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/dhosterman/scorekeeper/shield.svg
