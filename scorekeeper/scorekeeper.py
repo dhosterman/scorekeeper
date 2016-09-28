@@ -109,15 +109,17 @@ class Scorekeeper(_ScorekeeperSharedState):
         self._set_score()
 
     def _get_score(self):
-        with shelve.open(self._shelve_path()) as db:
-            key = type(self).__name__
-            result = db.get(key) or {}
+        db =  shelve.open(self._shelve_path())
+        key = type(self).__name__
+        result = db.get(key) or {}
+        db.close()
         return result.get("datetime"), result.get("score", 0)
 
     def _set_score(self):
-        with shelve.open(self._shelve_path()) as db:
-            key = type(self).__name__
-            db[key] = {"datetime": datetime.datetime.now(), "score": self.score}
+        db =  shelve.open(self._shelve_path())
+        key = type(self).__name__
+        db[key] = {"datetime": datetime.datetime.now(), "score": self.score}
+        db.close()
 
     def _shelve_path(self):
         return pkg_resources.resource_filename('scorekeeper', 'data/scores')
