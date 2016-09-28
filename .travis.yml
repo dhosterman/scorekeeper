@@ -17,4 +17,3 @@ deploy:
   on:
     tags: true
     repo: dhosterman/scorekeeper
-    condition: "$TOXENV == py27"
