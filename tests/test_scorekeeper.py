@@ -50,6 +50,10 @@ class ScorekeeperObjWithDefaults(Scorekeeper):
     default_decay = 5
 
 
+class ScorekeeperObjWithNamespace(Scorekeeper):
+    namespace = "namespace"
+
+
 @pytest.mark.parametrize("points, expected", [(10, 10), (20, 30), (30, 60)])
 def test_scorekeeper_increments(points, expected):
     scorekeeper_obj = ScorekeeperObj()
@@ -103,6 +107,16 @@ def test_scorekeeper_defaults(monkeypatch, points, time, expected):
         scorekeeper_obj = ScorekeeperObjWithDefaults()
         scorekeeper_obj(points)
         assert scorekeeper_obj.score == expected
+
+
+@pytest.mark.parametrize("namespace", [None, "ns", pytest.mark.xfail(None)])
+def test_scorekeeper_namespaced(namespace):
+    namespaced = ScorekeeperObj()
+    namespaced.namespace = namespace
+
+    namespaced(10)
+
+    assert namespaced.score == 10
 
 
 def test_scorekeeper_decorator():
