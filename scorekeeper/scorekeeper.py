@@ -66,6 +66,10 @@ class Scorekeeper(_ScorekeeperSharedState):
             it takes for the score to be reduced by 1 point. For example, if the
             current score is 20 and the decay is 5, after 5 seconds the score will
             be 19 and after 10 seconds the score will be 18, etc. This is optional.
+        namespace (str): The namespace under which this scorekeeper will store its state
+            in the shared data. This is optional, but a best practice as collisions are
+            possible if multiple scorekeepers have the same name. Recommended value is
+            the project or package name or some other unique string.
 
     Args:
         threshold (int): Replaces any default threshold. Optional.
@@ -76,6 +80,7 @@ class Scorekeeper(_ScorekeeperSharedState):
     """
     default_threshold = 100
     default_decay = None
+    namespace = None
 
     def __init__(self):
         _ScorekeeperSharedState.__init__(self)
@@ -110,25 +115,28 @@ class Scorekeeper(_ScorekeeperSharedState):
 
     def _get_score(self):
         db = shelve.open(self._shelve_path())
-        key = type(self).__name__
-        result = db.get(key) or {}
+        result = db.get(self._namespaced_key) or {}
         db.close()
         return result.get("datetime"), result.get("score", 0)
 
     def _set_score(self):
         db = shelve.open(self._shelve_path())
-        key = type(self).__name__
-        db[key] = {"datetime": datetime.datetime.now(), "score": self.score}
+        db[self._namespaced_key] = {"datetime": datetime.datetime.now(), "score": self.score}
         db.close()
+
+    @property
+    def _namespaced_key(self):
+        namespace = self.namespace + "_" if self.namespace else ""
+        return namespace + type(self).__name__
 
     def _shelve_path(self):
         return pkg_resources.resource_filename('scorekeeper', 'data/scores')
 
     def _decay(self, rate):
-        time = self._seconds_since_last_score()
-        decay = int(time / rate)
+        decay = int(self._seconds_since_last_score / rate)
         self.score = max(0, self.score - decay)
 
+    @property
     def _seconds_since_last_score(self):
         last_time = self._get_score()[0]
         if not last_time:
