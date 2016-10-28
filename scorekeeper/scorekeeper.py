@@ -9,7 +9,7 @@ __all__ = ["Scorekeeper", "score"]
 
 class _ScorekeeperSharedState(object):
     """This class manages the shared state held between all instances of any
-    child class of Scorekeeper. It implments the "Borg pattern" described at
+    child class of Scorekeeper. It implements the "Borg pattern" described at
     http://code.activestate.com/recipes/66531/.
 
     """
@@ -54,7 +54,7 @@ class Scorekeeper(_ScorekeeperSharedState):
         >>> scorekeeper.score
         10
 
-    Commonly overriden attributes for subclesses of Scorekeeper are:
+    Commonly overridden attributes for subclasses of Scorekeeper are:
         * default_threshold
         * default_decay
         * default_callback
